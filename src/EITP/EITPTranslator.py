@@ -28,37 +28,21 @@ class EITPTranslator:
         for line in input_str.splitlines():
 
             # headers converters
-            if line.find('operation: ') != -1:
+            if line.find('operation: ') != -1 and line[12:] != 'None':
                 new_eitp_obj.header.operation = EITPOperation(int(line[12:]))
 
-            if line.find('sender: ') != -1:
+            if line.find('sender: ') != -1 and line[9:] != 'None':
                 new_eitp_obj.header.sender = int(line[9:])
 
-            if line.find('recipient: ') != -1:
+            if line.find('recipient: ') != -1 and line[12:] != 'None':
                 new_eitp_obj.header.recipient = int(line[12:])
 
             # body converters
 
-            if line.find('data: ') != -1:
+            if line.find('data: ') != -1 and line[7:] != 'None':
                 new_eitp_obj.body.data = float(line[7:])
 
-            if line.find('current_time: ') != -1:
+            if line.find('current_time: ') != -1 and line[15:] != 'None':
                 new_eitp_obj.body.current_time = line[15:]
 
         return new_eitp_obj
-
-
-if __name__ == '__main__':
-    obj = EITPBaseData()
-    obj.header.sender = 1
-    obj.header.recipient = 2
-    obj.header.operation = EITPOperation.GET
-
-    obj.body.data = 2.3
-    obj.body.current_time = '12:32'
-
-    ogj = EITPTranslator.tostring(obj)
-    print(ogj)
-    esk = EITPTranslator.toeitpobj(ogj)
-    print(esk.header.sender)
-    print(esk.body.current_time)

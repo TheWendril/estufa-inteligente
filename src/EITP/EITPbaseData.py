@@ -12,14 +12,14 @@ class EITPOperation(Enum):
 
 
 class EITPHeader:
-    sender: str
-    recipient: str
-    operation: EITPOperation
+    sender: str = None
+    recipient: str = None
+    operation: EITPOperation = None
 
 
 class EITPBody:
-    data: float
-    current_time: str
+    data: float = None
+    current_time: str = None
 
 
 class EITPBaseData:

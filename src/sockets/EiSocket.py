@@ -12,7 +12,6 @@ class EISocket(ABC):
     def __init__(self) -> None:
         self.context = zmq.Context()
 
-
     @classmethod
     def send(cls, msg: str) -> int:
         pass

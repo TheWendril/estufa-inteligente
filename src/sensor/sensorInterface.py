@@ -8,6 +8,8 @@ from abc import ABC, abstractclassmethod
 
 class SensorInterface(SensorDataInterface, ABC):
 
+    sensorID: int = None
+
     @classmethod
     def monitoring(cls):
         pass
