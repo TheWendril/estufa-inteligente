@@ -1,4 +1,4 @@
-from EITPbaseData import EITPOperation, EITPBaseData
+from src.EITP.EITPBaseData import EITPOperation, EITPBaseData
 from time import struct_time
 
 

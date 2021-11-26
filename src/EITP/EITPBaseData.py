@@ -9,6 +9,7 @@ class EITPOperation(Enum):
     SEND: int = 4
     ENABLE: int = 5
     DISABLE: int = 6
+    SYNC: int = 7
 
 
 class EITPHeader:
