@@ -26,3 +26,8 @@ class EITPBody:
 class EITPBaseData:
     header = EITPHeader
     body = EITPBody
+
+
+class EITPConnectedClient:
+    id: int = None
+    ip_address: str = None

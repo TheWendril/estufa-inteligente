@@ -2,6 +2,7 @@ import src.EITP.EITPBaseData
 from src.EITP.EITPTranslator import EITPTranslator
 from abc import ABC
 from src.sockets.EiSocket import EISocketServer, EISocketClient, DEFAULT_LENGTH
+from Commander.EITPCommander import CommandInvoker
 import time
 
 DEFAULT_PORT = 35000
@@ -24,20 +25,26 @@ class EITPMessengerBase(ABC):
         return int(self.socket_client.receive(DEFAULT_LENGTH))
 
 
+# exclusive class to servers EITP
 class EITPMessengerServer:
 
     def __init__(self):
         self.socket_server = EISocketServer()
         self.socket_server.bind(protocol='tcp', host='127.0.0.1', port=DEFAULT_PORT)
+        self.invoker: CommandInvoker = CommandInvoker()
+        self.connected_clients: EITPConnectedClient() = []
 
     def start(self, condition_variable: bool) -> None:
+
         while condition_variable:
             eitp_obj = EITPTranslator.toeitpobj(self.socket_server.receive(DEFAULT_LENGTH))
-            # Write a response
+            self.invoker.set_command(eitp_obj.header.operation)
+            self.invoker.command.execute(self)
 
 
 # EITP messenger for devices/hosts clients which rather get data
 # and manage actuators
+
 class EITPMessengerBaseClient(EITPMessengerBase):
 
     def __init__(self, host: str, port: int):
