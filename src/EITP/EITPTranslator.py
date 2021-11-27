@@ -1,4 +1,4 @@
-from src.EITP.EITPBaseData import EITPOperation, EITPBaseData
+from src.EITP.EITPBaseData import EITPOperation, EITPBaseData, EITPType
 from time import struct_time
 
 
@@ -13,6 +13,7 @@ class EITPTranslator:
         syntactic_str += '\toperation: ' + str(obj_instance.header.operation.value) + '\n'
         syntactic_str += '\tsender: ' + str(obj_instance.header.sender) + '\n'
         syntactic_str += '\trecipient: ' + str(obj_instance.header.recipient) + '\n'
+        syntactic_str += '\ttype: ' + str(obj_instance.header.type) + '\n'
 
         # making the body
         syntactic_str += 'body: ' + '\n'
@@ -36,6 +37,9 @@ class EITPTranslator:
 
             if line.find('recipient: ') != -1 and line[12:] != 'None':
                 new_eitp_obj.header.recipient = int(line[12:])
+
+            if line.find('type: ') != -1 and line[7:] != 'None':
+                new_eitp_obj.header.type = EITPType(int(line[12:]))
 
             # body converters
 

@@ -12,10 +12,18 @@ class EITPOperation(Enum):
     SYNC: int = 7
 
 
+class EITPType(Enum):
+    SENSOR: int = 1
+    ACTUATOR: int = 2
+    CLIENT: int = 3
+    SERVER: int = 4
+
+
 class EITPHeader:
     sender: str = None
     recipient: str = None
     operation: EITPOperation = None
+    type: EITPType = None
 
 
 class EITPBody:
@@ -31,3 +39,6 @@ class EITPBaseData:
 class EITPConnectedClient:
     id: int = None
     ip_address: str = None
+    last_data: float = None
+    refresh: bool = True
+    type: EITPType

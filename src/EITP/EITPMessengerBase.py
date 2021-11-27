@@ -17,8 +17,9 @@ class EITPMessengerBase(ABC):
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
         return int(self.socket_client.receive(DEFAULT_LENGTH))
 
-    def disconnect(self) -> int:
+    def disconnect(self, id_client_sender: int) -> int:
         eitp_data = EITPbaseData.EITPBaseData()
+        eitp_data.header.sender = id_client_sender
         eitp_data.header.operation = EITPbaseData.EITPOperation.DISCONNECT
 
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
