@@ -75,8 +75,8 @@ class EITPMessengerBaseClient(EITPMessengerBase):
         super().__init__(host, port)
 
     def get(self, id_client_sender: int, id_client_recip: int) -> float:
-        eitp_data = EITPbaseData.EITPBaseData()
-        eitp_data.header.operation = EITPbaseData.EITPOperation.GET
+        eitp_data = EITPBaseData()
+        eitp_data.header.operation = EITPOperation.GET
         eitp_data.header.sender = id_client_sender
         eitp_data.header.recipient = id_client_recip
 
@@ -84,8 +84,8 @@ class EITPMessengerBaseClient(EITPMessengerBase):
         return float(self.socket_client.receive(DEFAULT_LENGTH))
 
     def enable(self, id_client_sender: int, id_client_recip: int) -> int:
-        eitp_data = EITPbaseData.EITPBaseData()
-        eitp_data.header.operation = EITPbaseData.EITPOperation.ENABLE
+        eitp_data = EITPBaseData()
+        eitp_data.header.operation = EITPOperation.ENABLE
         eitp_data.header.sender = id_client_sender
         eitp_data.header.recipient = id_client_recip
 
@@ -93,8 +93,8 @@ class EITPMessengerBaseClient(EITPMessengerBase):
         return int(self.socket_client.receive(DEFAULT_LENGTH))
 
     def disable(self, id_client_sender: int, id_client_recip: int) -> int:
-        eitp_data = EITPbaseData.EITPBaseData()
-        eitp_data.header.operation = EITPbaseData.EITPOperation.DISABLE
+        eitp_data = EITPBaseData()
+        eitp_data.header.operation = EITPOperation.DISABLE
         eitp_data.header.sender = id_client_sender
         eitp_data.header.recipient = id_client_recip
 
@@ -109,8 +109,8 @@ class EITPMessengerBaseSensor(EITPMessengerBase):
         super().__init__(host, port)
 
     def send(self, data: float, id_client: int) -> int:
-        eitp_data = EITPbaseData.EITPBaseData()
-        eitp_data.header.operation = EITPbaseData.EITPOperation.SEND
+        eitp_data = EITPBaseData()
+        eitp_data.header.operation = EITPOperation.SEND
         eitp_data.header.sender = id_client
         eitp_data.body.data = data
         eitp_data.body.current_time = time.strftime("%H:%M:%S", time.localtime())
@@ -127,8 +127,8 @@ class EITPMessengerBaseActuator(EITPMessengerBase):
         super().__init__(host, port)
 
     def sync(self, id_client_sender: int) -> int:
-        eitp_data = EITPbaseData.EITPBaseData()
-        eitp_data.header.operation = EITPbaseData.EITPOperation.SYNC
+        eitp_data = EITPBaseData()
+        eitp_data.header.operation = EITPOperation.SYNC
         eitp_data.header.sender = id_client_sender
 
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
