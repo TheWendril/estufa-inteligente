@@ -59,6 +59,7 @@ class EITPMessengerServer:
         print('The Server has been started!')
         while condition_variable:
             recv_data = self.socket_server.receive(DEFAULT_LENGTH)
+            print('Requisition received...')
             if recv_data == 'get_all_clients':
                 self.socket_server.send(str(self.connected_clients))
             else:

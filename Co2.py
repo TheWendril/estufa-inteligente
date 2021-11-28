@@ -5,7 +5,7 @@ from src.EITP.EITPBaseData import EITPType
 
 if __name__ == '__main__':
     sensor = CO2Sensor()
-    eitp = EITPMessengerBaseSensor('187.19.149.17', 12)
+    eitp = EITPMessengerBaseSensor('187.19.149.17', 35000)
     my_id = eitp.connect(EITPType.SENSOR, 'CO2Sensor')
 
     while True:
