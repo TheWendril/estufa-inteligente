@@ -1,5 +1,4 @@
 from typing import AbstractSet
-from sensorDataInterface import SensorDataInterface
 from abc import ABC, abstractclassmethod
 
 
@@ -7,7 +6,7 @@ from abc import ABC, abstractclassmethod
 # Each sensor must implements the monitoring function
 
 
-class SensorInterface(SensorDataInterface, ABC):
+class SensorInterface(ABC):
 
     sensorID: int = None
 

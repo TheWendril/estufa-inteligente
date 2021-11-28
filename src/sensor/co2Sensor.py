@@ -1,4 +1,4 @@
-from sensorInterface import SensorInterface
+from src.sensor.sensorInterface import SensorInterface
 
 
 class CO2Sensor(SensorInterface):

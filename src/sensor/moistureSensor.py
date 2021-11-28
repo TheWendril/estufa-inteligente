@@ -1,7 +1,7 @@
-from sensorInterface import SensorInterface
+from src.sensor.sensorInterface import SensorInterface
 
 
 class MoistureSensor(SensorInterface):
 
     def monitoring(self):
-        return 1
+        return 1.0

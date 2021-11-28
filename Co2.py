@@ -8,6 +8,7 @@ if __name__ == '__main__':
     eitp = EITPMessengerBaseSensor('187.19.149.17', 12)
     my_id = eitp.connect(EITPType.SENSOR, 'CO2Sensor')
 
+
     while True:
         data = CO2Sensor.monitoring()
         time.sleep(2)

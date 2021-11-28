@@ -1,4 +1,4 @@
-import src.EITP.EITPBaseData
+from src.EITP.EITPBaseData import EITPType, EITPBaseData, EITPOperation, EITPConnectedClient
 from src.EITP.EITPTranslator import EITPTranslator
 from abc import ABC
 from src.sockets.EiSocket import EISocketServer, EISocketClient, DEFAULT_LENGTH
@@ -12,11 +12,17 @@ class EITPMessengerBase(ABC):
 
     def __init__(self, host: str, port: int):
         self.socket_client = EISocketClient()
-        self.socket_client.connect(protocol='tcp', host=host, port=port)
 
-    def connect(self, client_type: EITPBaseData.EITPType, rotule: str) -> int:
-        eitp_data = EITPbaseData.EITPBaseData()
-        eitp_data.header.operation = EITPbaseData.EITPOperation.CONNECT
+        try:
+            self.socket_client.connect(protocol='tcp', host=host, port=port)
+            print('Client Connected!')
+
+        except e:
+            print(e)
+
+    def connect(self, client_type: EITPType, rotule: str) -> int:
+        eitp_data = EITPBaseData()
+        eitp_data.header.operation = EITPOperation.CONNECT
         eitp_data.header.type = client_type
         eitp_data.header.rotule = rotule
 
@@ -26,7 +32,7 @@ class EITPMessengerBase(ABC):
     def disconnect(self, id_client_sender: int) -> int:
         eitp_data = EITPbaseData.EITPBaseData()
         eitp_data.header.sender = id_client_sender
-        eitp_data.header.operation = EITPbaseData.EITPOperation.DISCONNECT
+        eitp_data.header.operation = EITPOperation.DISCONNECT
 
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
         return int(self.socket_client.receive(DEFAULT_LENGTH))
@@ -49,12 +55,13 @@ class EITPMessengerServer:
 
     def start(self, condition_variable: bool) -> None:
 
+        print('The Server has been started!')
         while condition_variable:
             recv_data = self.socket_server.receive(DEFAULT_LENGTH)
             if recv_data == 'get_all_clients':
                 self.socket_server.send(str(self.connected_clients))
             else:
-                eitp_obj = EITPTranslator.toeitpobj()
+                eitp_obj = EITPTranslator.toeitpobj(recv_data)
                 self.invoker.set_command(eitp_obj.header.operation)
                 self.invoker.command.execute(self, eitp_obj)
 
@@ -109,6 +116,7 @@ class EITPMessengerBaseSensor(EITPMessengerBase):
         eitp_data.body.current_time = time.strftime("%H:%M:%S", time.localtime())
 
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
+        print('Sending ' + eitp_data.body.data)
         return int(self.socket_client.receive(DEFAULT_LENGTH))
 
 
