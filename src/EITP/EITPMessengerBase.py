@@ -31,7 +31,7 @@ class EITPMessengerBase(ABC):
         return int(self.socket_client.receive(DEFAULT_LENGTH))
 
     def disconnect(self, id_client_sender: int) -> int:
-        eitp_data = EITPbaseData.EITPBaseData()
+        eitp_data = EITPBaseData()
         eitp_data.header.sender = id_client_sender
         eitp_data.header.operation = EITPOperation.DISCONNECT
 
