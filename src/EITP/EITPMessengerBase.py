@@ -2,13 +2,18 @@ import src.EITP.EITPBaseData
 from src.EITP.EITPTranslator import EITPTranslator
 from abc import ABC
 from src.sockets.EiSocket import EISocketServer, EISocketClient, DEFAULT_LENGTH
-from Commander.EITPCommander import CommandInvoker
+from src.EITP.Commander.EITPCommander import CommandInvoker
 import time
 
 DEFAULT_PORT = 35000
 
 
+# EITP Messenger SuperClass
 class EITPMessengerBase(ABC):
+
+    def __init__(self, host: str, port: int):
+        self.socket_client = EISocketClient()
+        self.socket_client.connect(protocol='tcp', host=host, port=port)
 
     def connect(self) -> int:
         eitp_data = EITPbaseData.EITPBaseData()
@@ -40,7 +45,7 @@ class EITPMessengerServer:
         while condition_variable:
             eitp_obj = EITPTranslator.toeitpobj(self.socket_server.receive(DEFAULT_LENGTH))
             self.invoker.set_command(eitp_obj.header.operation)
-            self.invoker.command.execute(self)
+            self.invoker.command.execute(self, eitp_obj)
 
 
 # EITP messenger for devices/hosts clients which rather get data
@@ -49,8 +54,7 @@ class EITPMessengerServer:
 class EITPMessengerBaseClient(EITPMessengerBase):
 
     def __init__(self, host: str, port: int):
-        self.socket_client = EISocketClient()
-        self.socket_client.connect(protocol='tcp', host=host, port=port)
+        super().__init__(host, port)
 
     def get(self, id_client_sender: int, id_client_recip: int) -> float:
         eitp_data = EITPbaseData.EITPBaseData()
@@ -83,6 +87,9 @@ class EITPMessengerBaseClient(EITPMessengerBase):
 # EITPMessenger for Sensors
 class EITPMessengerBaseSensor(EITPMessengerBase):
 
+    def __init__(self, host: str, port: int):
+        super().__init__(host, port)
+
     def send(self, data: float, id_client: int) -> int:
         eitp_data = EITPbaseData.EITPBaseData()
         eitp_data.header.operation = EITPbaseData.EITPOperation.SEND
@@ -97,6 +104,9 @@ class EITPMessengerBaseSensor(EITPMessengerBase):
 # EITPMessenger for actuators
 class EITPMessengerBaseActuator(EITPMessengerBase):
 
+    def __init__(self, host: str, port: int):
+        super().__init__(host, port)
+
     def sync(self, id_client_sender: int) -> int:
         eitp_data = EITPbaseData.EITPBaseData()
         eitp_data.header.operation = EITPbaseData.EITPOperation.SYNC
@@ -109,4 +119,5 @@ class EITPMessengerBaseActuator(EITPMessengerBase):
 # create a general class for all purpose
 class EITPMessenger(EITPMessengerBaseActuator, EITPMessengerBaseSensor,
                     EITPMessengerBaseClient):
-    pass
+    def __init__(self, host: str, port: int):
+        super().__init__(host, port)

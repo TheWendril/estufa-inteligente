@@ -21,6 +21,18 @@ class CommandInvoker:
     def set_command(self, operation: EITPOperation):
         if operation == EITPOperation.GET:
             self.command = GetCommand()
+        if operation == EITPOperation.SEND:
+            self.command = SendCommand()
+        if operation == EITPOperation.ENABLE:
+            self.command = EnableCommand()
+        if operation == EITPOperation.DISABLE:
+            self.command = DisableCommand()
+        if operation == EITPOperation.SYNC:
+            self.command = SyncCommand()
+        if operation == EITPOperation.CONNECT:
+            self.command = ConnectCommand()
+        if operation == EITPOperation.DISCONNECT:
+            self.command = DisableCommand()
 
     def execute_command(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
         self.command.execute(server, message)
@@ -49,24 +61,30 @@ class SendCommand(Command):
 class SyncCommand(Command):
 
     def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
-        pass
+        if client.id == message.header.sender:
+            server.socket_server.send(str(client.last_data))
 
 
 class EnableCommand(Command):
 
     def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
-        pass
+        for client in server.connected_clients:
+            if client.id == message.header.recipient:
+                client.last_data = 1.0
+                server.socket_server.send('1')
 
 
 class DisableCommand(Command):
 
     def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
-        pass
+        if client.id == message.header.recipient:
+            client.last_data = 0.0
+            server.socket_server.send('1')
 
 
 class ConnectCommand(Command):
 
-    def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> int:
+    def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
         new_client = EITPConnectedClient()
         new_client.id = random.randrange(0, 10000, 1)
         new_client.type = message.header.type
@@ -81,8 +99,9 @@ class ConnectCommand(Command):
 
 class DisconnectCommand(Command):
 
-    def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> int:
+    def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
         for client in server.connected_clients:
             if client.id == message.header.sender:
                 index_to_remove = server.connected_clients.index(client)
                 server.connected_clients.pop(index_to_remove)
+                server.socket_server.send('1')
