@@ -12,13 +12,14 @@ class EITPMessengerBase(ABC):
 
     def __init__(self, host: str, port: int):
         self.socket_client = EISocketClient()
+        print('trying connection with the server...')
 
         try:
             self.socket_client.connect(protocol='tcp', host=host, port=port)
             print('Client Connected!')
 
-        except e:
-            print(e)
+        except NameError:
+            print('A error has been ocurred on connection')
 
     def connect(self, client_type: EITPType, rotule: str) -> int:
         eitp_data = EITPBaseData()
@@ -116,7 +117,7 @@ class EITPMessengerBaseSensor(EITPMessengerBase):
         eitp_data.body.current_time = time.strftime("%H:%M:%S", time.localtime())
 
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
-        print('Sending ' + eitp_data.body.data)
+        print('Sending ' + str(eitp_data.body.data))
         return int(self.socket_client.receive(DEFAULT_LENGTH))
 
 

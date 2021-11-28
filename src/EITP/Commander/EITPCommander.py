@@ -16,7 +16,7 @@ class Command(ABC):
 class CommandInvoker:
 
     def __init__(self):
-        self.command: Command = None
+        self.command: GetCommand()
 
     def set_command(self, operation: EITPOperation):
         if operation == EITPOperation.GET:
@@ -35,6 +35,7 @@ class CommandInvoker:
             self.command = DisableCommand()
 
     def execute_command(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
+        print('Executing a command')
         self.command.execute(server, message)
 
 
