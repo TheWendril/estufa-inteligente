@@ -56,6 +56,7 @@ class SendCommand(Command):
         for client in server.connected_clients:
             if client.id == message.header.sender:
                 client.last_data = message.body.data
+                print('Server receive data from ' + client.rotule)
 
 
 class SyncCommand(Command):
@@ -88,13 +89,11 @@ class ConnectCommand(Command):
         new_client = EITPConnectedClient()
         new_client.id = random.randrange(0, 10000, 1)
         new_client.type = message.header.type
+        new_client.rotule = message.header.rotule
         server.connected_clients.insert(0, new_client)
+        print('A client with rotule: ' + new_client.rotule + ' has been added')
         # !! add a ip address in future
-
-        if new_client.type == EITPType.CLIENT:
-            server.socket_server.send(str(server.connected_clients))
-        else:
-            server.socket_server.send(str(new_client.id))
+        server.socket_server.send(str(new_client.id))
 
 
 class DisconnectCommand(Command):

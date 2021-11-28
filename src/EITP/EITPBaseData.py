@@ -24,6 +24,7 @@ class EITPHeader:
     recipient: str = None
     operation: EITPOperation = None
     type: EITPType = None
+    rotule: str = None
 
 
 class EITPBody:
@@ -40,5 +41,5 @@ class EITPConnectedClient:
     id: int = None
     ip_address: str = None
     last_data: float = None
-    refresh: bool = True
     type: EITPType
+    rotule: str = None

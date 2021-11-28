@@ -15,5 +15,4 @@ class SensorInterface(SensorDataInterface, ABC):
     def monitoring(cls):
         pass
 
-    def connect_to_server(self):
-        pass
+

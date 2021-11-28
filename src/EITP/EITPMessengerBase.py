@@ -2,7 +2,6 @@ import src.EITP.EITPBaseData
 from src.EITP.EITPTranslator import EITPTranslator
 from abc import ABC
 from src.sockets.EiSocket import EISocketServer, EISocketClient, DEFAULT_LENGTH
-from src.EITP.Commander.EITPCommander import CommandInvoker
 import time
 
 DEFAULT_PORT = 35000
@@ -15,9 +14,11 @@ class EITPMessengerBase(ABC):
         self.socket_client = EISocketClient()
         self.socket_client.connect(protocol='tcp', host=host, port=port)
 
-    def connect(self) -> int:
+    def connect(self, client_type: EITPBaseData.EITPType, rotule: str) -> int:
         eitp_data = EITPbaseData.EITPBaseData()
         eitp_data.header.operation = EITPbaseData.EITPOperation.CONNECT
+        eitp_data.header.type = client_type
+        eitp_data.header.rotule = rotule
 
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
         return int(self.socket_client.receive(DEFAULT_LENGTH))
@@ -37,15 +38,25 @@ class EITPMessengerServer:
     def __init__(self):
         self.socket_server = EISocketServer()
         self.socket_server.bind(protocol='tcp', host='127.0.0.1', port=DEFAULT_PORT)
+
+        # its necessary to import the module here because
+        # the class definition may is done
+        from src.EITP.Commander.EITPCommander import CommandInvoker
+        # end of import
+
         self.invoker: CommandInvoker = CommandInvoker()
         self.connected_clients: EITPConnectedClient() = []
 
     def start(self, condition_variable: bool) -> None:
 
         while condition_variable:
-            eitp_obj = EITPTranslator.toeitpobj(self.socket_server.receive(DEFAULT_LENGTH))
-            self.invoker.set_command(eitp_obj.header.operation)
-            self.invoker.command.execute(self, eitp_obj)
+            recv_data = self.socket_server.receive(DEFAULT_LENGTH)
+            if recv_data == 'get_all_clients':
+                self.socket_server.send(str(self.connected_clients))
+            else:
+                eitp_obj = EITPTranslator.toeitpobj()
+                self.invoker.set_command(eitp_obj.header.operation)
+                self.invoker.command.execute(self, eitp_obj)
 
 
 # EITP messenger for devices/hosts clients which rather get data
