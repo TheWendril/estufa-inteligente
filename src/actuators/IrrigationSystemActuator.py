@@ -1,7 +1,7 @@
 from actuatorInterface import actuatorInterface
 
 
-class irrigationSystemActuator(actuatorInterface):
+class IrrigationSystemActuator(actuatorInterface):
 
     def enable(self):
         # do something

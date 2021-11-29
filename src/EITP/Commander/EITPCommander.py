@@ -32,7 +32,7 @@ class CommandInvoker:
         if operation == EITPOperation.CONNECT:
             self.command = ConnectCommand()
         if operation == EITPOperation.DISCONNECT:
-            self.command = DisableCommand()
+            self.command = DisconnectCommand()
 
     def execute_command(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
         print('Executing a command')
@@ -48,7 +48,10 @@ class GetCommand(Command):
     def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
         for client in server.connected_clients:
             if client.id == message.header.recipient:
-                server.socket_server.send(str(client.last_data))
+                if client.last_data is not None:
+                    server.socket_server.send(str(client.last_data))
+                else:
+                    server.socket_server.send(str(0.0))
 
 
 class SendCommand(Command):
@@ -64,8 +67,12 @@ class SendCommand(Command):
 class SyncCommand(Command):
 
     def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
-        if client.id == message.header.sender:
-            server.socket_server.send(str(client.last_data))
+        for client in server.connected_clients:
+            if client.id == message.header.sender:
+                if client.last_data is not None:
+                    server.socket_server.send(str(client.last_data))
+                else:
+                    server.socket_server.send(str(0.0))
 
 
 class EnableCommand(Command):
@@ -80,9 +87,10 @@ class EnableCommand(Command):
 class DisableCommand(Command):
 
     def execute(self, server: EITPMessengerServer, message: EITPBaseData) -> None:
-        if client.id == message.header.recipient:
-            client.last_data = 0.0
-            server.socket_server.send('1')
+        for client in server.connected_clients:
+            if client.id == message.header.recipient:
+                client.last_data = 0.0
+                server.socket_server.send('1')
 
 
 class ConnectCommand(Command):
@@ -105,4 +113,5 @@ class DisconnectCommand(Command):
             if client.id == message.header.sender:
                 index_to_remove = server.connected_clients.index(client)
                 server.connected_clients.pop(index_to_remove)
+                print('Host has been removed! id: ' + str(message.header.sender))
                 server.socket_server.send('1')

@@ -146,7 +146,7 @@ class EITPMessengerActuator(EITPMessengerBase):
         eitp_data.header.sender = id_client_sender
 
         self.socket_client.send(EITPTranslator.tostring(eitp_data))
-        return int(self.socket_client.receive(DEFAULT_LENGTH))
+        return int(float(self.socket_client.receive(DEFAULT_LENGTH)))
 
 
 # create a general class for all purpose

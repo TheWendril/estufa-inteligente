@@ -1,6 +1,5 @@
 from src.EITP.EITPBaseData import EITPType, EITPConnectedClient
 from src.EITP.EITPMessenger import EITPMessengerClient
-from simple_term_menu import TerminalMenu
 import time
 
 
@@ -15,13 +14,28 @@ if __name__ == '__main__':
         client_list = eval(message_received)
 
         # Convert to EITP TYPE and make a option list
-        options = []
         for client in client_list:
-            options.append(client[3])
             client[0] = EITPType(client[0])
 
-        # making a menu
-        menu = TerminalMenu(options)
-        response = menu.show()
+        # show menu and wait a option
+        print('ROTULE     ID   TYPE')
+        for client in client_list:
+            if client[0] != EITPType.CLIENT:
+                print(str(client[3]) + ' ' + str(client[2]) + ' ' + str(client[0].name))
 
-        time.sleep(2)
+        option = list(input('>> ').split(' '))
+
+        if option[0] == 'GET':
+            data = eitp.get(my_id, int(option[1]))
+            print(data)
+
+        elif option[0] == 'ENABLE':
+            eitp.enable(my_id, int(option[1]))
+
+        elif option[0] == 'DISABLE':
+            eitp.disable(my_id, int(option[1]))
+
+        elif option[0] == 'DISCONNECT':
+            eitp.disconnect(my_id)
+            exit(0)
+

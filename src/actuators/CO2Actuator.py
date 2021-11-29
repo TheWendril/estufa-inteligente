@@ -1,4 +1,4 @@
-from actuatorInterface import actuatorInterface
+from src.actuators.actuatorInterface import actuatorInterface
 
 
 class CO2Actuator(actuatorInterface):

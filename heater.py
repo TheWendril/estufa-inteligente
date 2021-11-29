@@ -1,11 +1,11 @@
 import time
-from src.actuators.CO2Actuator import CO2Actuator
+from src.actuators.HeaterActuator import HeaterActuator
 from src.EITP.EITPMessenger import EITPType, EITPMessengerActuator
 
 if __name__ == '__main__':
-    actuator = CO2Actuator()
+    actuator = HeaterActuator()
     eitp = EITPMessengerActuator('127.0.0.1', 35000)
-    my_id = eitp.connect(EITPType.ACTUATOR, 'CO2 Injector')
+    my_id = eitp.connect(EITPType.ACTUATOR, 'Heater')
 
     while True:
         response = eitp.sync(my_id)

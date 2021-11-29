@@ -1,7 +1,7 @@
-from actuatorInterface import actuatorInterface
+from src.actuators.actuatorInterface import actuatorInterface
 
 
-class heaterActuator(actuatorInterface):
+class HeaterActuator(actuatorInterface):
 
     def enable(self):
         # do something
