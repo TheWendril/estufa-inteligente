@@ -47,7 +47,7 @@ class EITPMessengerServer:
         self.socket_server.bind(protocol='tcp', host='127.0.0.1', port=DEFAULT_PORT)
 
         # its necessary to import the module here because
-        # the class definition may is done
+        # the class definition may is done first
         from src.EITP.Commander.EITPCommander import CommandInvoker
         # end of import
 
@@ -60,8 +60,20 @@ class EITPMessengerServer:
         while condition_variable:
             recv_data = self.socket_server.receive(DEFAULT_LENGTH)
             print('Requisition received...')
+
             if recv_data == 'get_all_clients':
-                self.socket_server.send(str(self.connected_clients))
+
+                clients = []
+                for client in self.connected_clients:
+                    client_attributes = []
+                    client_attributes.insert(0, client.rotule)
+                    client_attributes.insert(0, client.id)
+                    client_attributes.insert(0, client.last_data)
+                    client_attributes.insert(0, client.type.value)
+                    clients.insert(0, client_attributes)
+
+                self.socket_server.send(str(clients))
+
             else:
                 eitp_obj = EITPTranslator.toeitpobj(recv_data)
                 self.invoker.set_command(eitp_obj.header.operation)
@@ -71,7 +83,7 @@ class EITPMessengerServer:
 # EITP messenger for devices/hosts clients which rather get data
 # and manage actuators
 
-class EITPMessengerBaseClient(EITPMessengerBase):
+class EITPMessengerClient(EITPMessengerBase):
 
     def __init__(self, host: str, port: int):
         super().__init__(host, port)
@@ -105,7 +117,7 @@ class EITPMessengerBaseClient(EITPMessengerBase):
 
 
 # EITPMessenger for Sensors
-class EITPMessengerBaseSensor(EITPMessengerBase):
+class EITPMessengerSensor(EITPMessengerBase):
 
     def __init__(self, host: str, port: int):
         super().__init__(host, port)
@@ -123,7 +135,7 @@ class EITPMessengerBaseSensor(EITPMessengerBase):
 
 
 # EITPMessenger for actuators
-class EITPMessengerBaseActuator(EITPMessengerBase):
+class EITPMessengerActuator(EITPMessengerBase):
 
     def __init__(self, host: str, port: int):
         super().__init__(host, port)
@@ -138,7 +150,7 @@ class EITPMessengerBaseActuator(EITPMessengerBase):
 
 
 # create a general class for all purpose
-class EITPMessenger(EITPMessengerBaseActuator, EITPMessengerBaseSensor,
-                    EITPMessengerBaseClient):
+class EITPMessenger(EITPMessengerActuator, EITPMessengerSensor,
+                    EITPMessengerClient):
     def __init__(self, host: str, port: int):
         super().__init__(host, port)

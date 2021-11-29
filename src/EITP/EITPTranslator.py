@@ -13,7 +13,7 @@ class EITPTranslator:
         syntactic_str += '\toperation: ' + str(obj_instance.header.operation.value) + '\n'
         syntactic_str += '\tsender: ' + str(obj_instance.header.sender) + '\n'
         syntactic_str += '\trecipient: ' + str(obj_instance.header.recipient) + '\n'
-        syntactic_str += '\ttype: ' + str(obj_instance.header.type) + '\n'
+        syntactic_str += '\ttype: ' + str(obj_instance.header.type.value) + '\n'
         syntactic_str += '\trotule: ' + str(obj_instance.header.rotule) + '\n'
 
         # making the body
@@ -40,10 +40,10 @@ class EITPTranslator:
                 new_eitp_obj.header.recipient = int(line[12:])
 
             if line.find('type: ') != -1 and line[7:] != 'None':
-                new_eitp_obj.header.type = EITPType(int(line[12:]))
+                new_eitp_obj.header.type = EITPType(int(line[7:]))
 
             if line.find('rotule: ') != -1 and line[9:] != 'None':
-                new_eitp_obj.header.type = (line[12:])
+                new_eitp_obj.header.rotule = line[9:]
 
             # body converters
 

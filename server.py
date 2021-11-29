@@ -1,4 +1,4 @@
-from src.EITP.EITPMessengerBase import EITPMessengerServer
+from src.EITP.EITPMessenger import EITPMessengerServer
 
 if __name__ == '__main__':
 

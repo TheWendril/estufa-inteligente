@@ -1,5 +1,5 @@
 from src.EITP.EITPBaseData import EITPOperation, EITPBaseData, EITPConnectedClient, EITPType
-from src.EITP.EITPMessengerBase import EITPMessengerServer
+from src.EITP.EITPMessenger import EITPMessengerServer
 from abc import ABC
 import random
 
@@ -58,6 +58,7 @@ class SendCommand(Command):
             if client.id == message.header.sender:
                 client.last_data = message.body.data
                 print('Server receive data from ' + client.rotule)
+                server.socket_server.send('1')
 
 
 class SyncCommand(Command):
