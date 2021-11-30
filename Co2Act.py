@@ -14,4 +14,4 @@ if __name__ == '__main__':
         elif response == 0:
             actuator.disable()
 
-        time.sleep(2)
+        time.sleep(4)

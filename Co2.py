@@ -10,6 +10,6 @@ if __name__ == '__main__':
 
     while True:
         data = CO2Sensor.monitoring(self=None)
-        time.sleep(2)
+        time.sleep(4)
         eitp.send(data, my_id)
 
