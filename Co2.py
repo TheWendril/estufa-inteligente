@@ -11,5 +11,7 @@ if __name__ == '__main__':
     while True:
         data = CO2Sensor.monitoring(self=None)
         time.sleep(4)
+
+        # send data to server
         eitp.send(data, my_id)
 

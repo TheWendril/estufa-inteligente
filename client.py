@@ -17,7 +17,7 @@ if __name__ == '__main__':
         for client in client_list:
             client[0] = EITPType(client[0])
 
-        # show menu and wait a option
+        # show menu and wait for option
         print('ROTULE     ID   TYPE')
         for client in client_list:
             if client[0] != EITPType.CLIENT:
